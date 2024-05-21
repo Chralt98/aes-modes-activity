@@ -95,12 +95,14 @@ fn group(data: Vec<u8>) -> Vec<[u8; BLOCK_SIZE]> {
 
 /// Does the opposite of the group function
 fn un_group(blocks: Vec<[u8; BLOCK_SIZE]>) -> Vec<u8> {
-	todo!()
+    blocks.into_iter().flatten().collect()
 }
 
 /// Does the opposite of the pad function.
 fn un_pad(data: Vec<u8>) -> Vec<u8> {
-	todo!()
+    let number_pad_bytes = data[data.len() - 1] as usize;
+
+    data[..data.len() - number_pad_bytes].to_vec()
 }
 
 /// The first mode we will implement is the Electronic Code Book, or ECB mode.
@@ -164,4 +166,27 @@ fn ctr_encrypt(plain_text: Vec<u8>, key: [u8; BLOCK_SIZE]) -> Vec<u8> {
 
 fn ctr_decrypt(cipher_text: Vec<u8>, key: [u8; BLOCK_SIZE]) -> Vec<u8> {
 	todo!()
+}#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_pad() {
+        let data = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let padded_data = pad(data.clone());
+        let unpadded_data = un_pad(padded_data.clone());
+
+        assert_eq!(padded_data.len(), 16);
+        assert_eq!(unpadded_data, data);
+    }
+
+    #[test]
+    fn test_group() {
+        let data: [u8; BLOCK_SIZE] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        let grouped_data = group(data.to_vec());
+        let ungrouped_data = un_group(grouped_data.clone());
+
+        assert_eq!(grouped_data.len(), 1);
+        assert_eq!(ungrouped_data, data);
+    }
 }
