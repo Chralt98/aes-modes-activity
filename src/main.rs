@@ -105,7 +105,12 @@ fn un_group(blocks: Vec<[u8; BLOCK_SIZE]>) -> Vec<u8> {
 
 /// Does the opposite of the pad function.
 fn un_pad(data: Vec<u8>) -> Vec<u8> {
-	todo!()
+    // look at the last byte and remove that number of bytes
+	let mut un_pad_data: Vec<u8> = Vec::new();
+    if let Some(last_byte) = data.last() {
+        un_pad_data = un_pad_data[..data.len() - *last_byte as usize].to_vec()
+    }
+    un_pad_data
 }
 
 /// The first mode we will implement is the Electronic Code Book, or ECB mode.
